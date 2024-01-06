@@ -1,11 +1,9 @@
+We plan to offer two versions of our webserver, which will be based on Flask (Python):
 
-Wir hätten es so konzipiert, dass wir zwei Versionen des Webservers (Flask) anbieten:
-* erste Version läuft Problemlos und zeigt einfach einen statischen Text an
-* zweite Version wirft ab und zu (z.B. jeder 5te Request) einen schlechten Status-Code (404...), oder braucht länger um die Anfragen zu bearbeiten, z.B. durch sleep Commands. Dieser Version zeigt für Kontroll-Zwecke einen leicht anderen Text an.
+* The first version will be problem free and just display a (mostly) static text. It should however be evident, which pod is being accessed, e.g. by fetching the hostname.
+* The second version will display the slightly altered information as the first (to check which version one is accessing), but will also feature problems randomly (e.g., 20% of the time, using a RNG) like 404 error-codes and long response times using sleep commands.
 
+Initially, the first version will run on all pods, mimicking a normal, bugfree production environment.
+Using canary releases in flagger, the pods will continuously be changed to version 2. By manually accessing the page many times, or by using the testing suite outlined in the flagger documentation, requests will be made and metrics for availability and performance will be generated. Using these metrics, Flagger can (automatically) rollback to the last stable version.
 
-Die erste Version läuft zu Beginn auf den Pods, und wird dann durch Canary Releases & Flagger kontinuierlich von der neuen Version ausgetauscht.
-Da die neue Version Probleme macht soll automatisch ein Rollback auf die erste Version durchgeführt werden. 
-Für die Installation/Konfiguration davon, wird der Package Manager "helm" für Kubernetes verwendet.
-Als Ingress-Controller könnte NGINX verwendet werden.
-Durch Logging und Alarme könnte man auf relevante Performance-Metriken zugreifen, bzw. die Reaktion auf Probleme verbessern.
+To install this setup, the package manager "helm" for Kubernetes will be used. For loadbalancing the NGINX-Ingress-Controller will be used, which will expose relevant metrics in the prometheus format, which is why the prometheus addon will also be required. By logging these metrics, one can inspect the system performance and even configure alarms (e.g., via Discord or other chat platforms) to react to issues faster.
