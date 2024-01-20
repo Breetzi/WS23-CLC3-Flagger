@@ -26,14 +26,12 @@ kubectl apply -f https://raw.githubusercontent.com/fluxcd/flagger/main/artifacts
 The following statement installs both flagger and prometheus and configures relevant settings, so that relevant generated metrics are also written to prometheus, and that NGINX is set as the Meshprovider.
 >helm upgrade -i flagger flagger/flagger --namespace test --set prometheus.install=true --set meshProvider=nginx --set metricsServer=http://flagger-prometheus:9090
 
-# ---------------------------------
-
-# Configure Ingress
+## Configure Ingress
 The following command sets up the ingress, so that in the following steps, traffic is routed to our deployment called "podinfo" that contains a webservice.
 
 >kubectl apply -f ingress.yaml
 
-# Setup Deployment
+## Setup Deployment
 The following command fetches the kubernetes configuration files from the creators of flagger and uses them to create said deployment.
 >kubectl apply -k https://github.com/fluxcd/flagger//kustomize/podinfo?ref=main
 
@@ -67,5 +65,22 @@ In another step, another image is applied, that makes it possible for us to see 
 
 To have the rollback take effect, we now simulate traffic that takes long to execute. To do this, the following command is executed in WSL/Ubuntu:
 >watch curl http://<ingress-url>/delay/5
+
+## Lessons learned
+ * Watch out when it comes to namespaces! If you have two resources in different namespaces, you might not see your changes and ask yourself why. This cost us some time to find out!
+ * Also regarding namespaces: If your services can't be reached by other resources, it's probably due to namespaces as well.
+ * When it comes to complex setups like canary releases, where additional deployments and services are created automatically, it's necessary to have an overview of how everything plays together first. We've been trying to circumvent using a DNS (since one seemed to be required for the Ingress), when in reality the only necessary thing is the service name, and that would be created later by the canary resource!
+ * Sometimes resources are buggy. Just delete them, and re-apply the configurations. Don't waste your time.
+ * When it comes to canary releases and metrics, it's detrimental to know what is currently primary, and what falls under canary services/deployments. If you select the wrong metrics/resources, your application won't work as expected!
+
+# Research
+This webpage gives a good overview about the different components of flagger:
+https://docs.flagger.app/usage/how-it-works
+
+The following guides were used to get the project working:
+ * https://docs.flagger.app/install/flagger-install-on-kubernetes#install-flagger-with-helm​
+ * https://docs.flagger.app/usage/alerting​
+ * https://docs.flagger.app/tutorials/nginx-progressive-delivery​
+ * https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 
 
