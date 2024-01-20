@@ -1,9 +1,12 @@
 from flask import Flask
 import socket
+import time
 app = Flask(__name__)
+
 
 @app.route('/')
 def home():
+    time.sleep(2)
     return f"""
     <html>
         <head>
@@ -15,4 +18,4 @@ def home():
     </html>"""
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=9898)

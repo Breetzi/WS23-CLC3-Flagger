@@ -1,0 +1,11 @@
+apiVersion: flagger.app/v1beta1
+kind: AlertProvider
+metadata:
+  name: qa-discord
+  namespace: test
+spec:
+  type: discord
+  # webhook address (ignored if secretRef is specified)
+  # or https://slack.com/api/chat.postMessage if you use token in the secret
+  address: https://discord.com/api/webhooks/1198329920477204531/inqmcLV6ZS4tPnB1ym1mf_utF-H14z72QRHpkDKNLiG7OuYpVNeDL102l3552Pd4sFQA
+  # optional http/s proxy

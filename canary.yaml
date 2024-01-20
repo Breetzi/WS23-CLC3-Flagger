@@ -9,7 +9,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: webapp-service
+    name: podinfo
   # ingress reference
   ingressRef:
     apiVersion: networking.k8s.io/v1
@@ -29,6 +29,11 @@ spec:
     # container port number or name
     targetPort: 9898
   analysis:
+    alerts:
+      - name: "qa Discord"
+        severity: warn
+        providerRef:
+          name: qa-discord
     # schedule interval (default 60s)
     interval: 10s
     # max number of failed metric checks before rollback
@@ -41,13 +46,12 @@ spec:
     stepWeight: 5
     # NGINX Prometheus checks
     metrics:
-    - name: request-success-rate
-      # minimum req success rate (non 5xx responses)
-      # percentage (0-100)
+    - name: "latency"
+      templateRef:
+        name: latency
       thresholdRange:
-        min: 99
+        max: 0.5
       interval: 1m
-    # testing (optional)
     webhooks:
       - name: acceptance-test
         type: pre-rollout
@@ -60,4 +64,4 @@ spec:
         url: http://flagger-loadtester.test/
         timeout: 5s
         metadata:
-          cmd: "hey -z 1m -q 10 -c 2 http://34.42.68.94/"
+          cmd: "hey -z 1m -q 10 -c 2 http://35.223.3.49"
