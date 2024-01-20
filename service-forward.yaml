@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: webapp-service-forward
+  namespace: test
+spec:
+  type: ExternalName
+  externalName: webapp-service.clc-flagger.svc.cluster.local
+  ports:
+  - port: 80
