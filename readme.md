@@ -26,7 +26,9 @@ Again, add the relevant repo for flagger to helm.
 helm repo add flagger https://flagger.app
 ```
 In order to get the new configuration files working, the custom resource definitions need to be fetched and applied:
+```
 kubectl apply -f https://raw.githubusercontent.com/fluxcd/flagger/main/artifacts/flagger/crd.yaml
+```
 
 The following statement installs both flagger and prometheus and configures relevant settings, so that relevant generated metrics are also written to prometheus, and that NGINX is set as the Meshprovider.
 ```
